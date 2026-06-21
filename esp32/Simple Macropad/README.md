@@ -1,132 +1,93 @@
-\# ESP32-S2 Touch Media Controller
+# ESP32-S2 Touch Media Controller
 
+A compact USB HID media controller built with the ESP32-S2. The device uses capacitive touch inputs to trigger media controls and browser shortcuts, appearing as a standard USB HID device without requiring any additional drivers.
 
+## Features
 
-A small USB HID device built with an ESP32-S2.
+- Open a new browser tab (`Ctrl + T`)
+- Previous track
+- Play / Pause
+- Next track
+- Capacitive touch controls
+- USB HID support
+- Driverless operation on modern operating systems
 
+## Hardware
 
+The project was tested on the **Flipper WiFi Dev Board (ESP32-S2)**, but it should work with most ESP32-S2 boards that support capacitive touch input.
 
-The device uses capacitive touch pads to control media playback and browser shortcuts. It connects over USB and shows up as a standard HID device, so no drivers are needed.
+### Touch Pin Mapping
 
-
-
-\## Features
-
-
-
-\* Open a new browser tab
-
-\* Previous track
-
-\* Play / Pause
-
-\* Next track
-
-\* Capacitive touch input
-
-\* USB HID support
-
-
-
-\## Hardware
-
-
-
-Tested on the Flipper WiFi Dev Board (ESP32-S2), but it should work on other ESP32-S2 boards with touch-capable GPIOs.
-
-
-
-Current touch pin mapping:
-
-
-
-| Function       | GPIO   |
-
-| -------------- | ------ |
-
-| New Tab        | GPIO1  |
-
+| Function | GPIO |
+|----------|------|
+| New Tab | GPIO1 |
 | Previous Track | GPIO13 |
+| Play / Pause | GPIO12 |
+| Next Track | GPIO10 |
 
-| Play/Pause     | GPIO12 |
+## How It Works
 
-| Next Track     | GPIO10 |
+The ESP32-S2 continuously monitors the configured touch pins.
 
+When a touch event is detected:
 
+- **New Tab** sends a keyboard shortcut (`Ctrl + T`) using the USB keyboard HID interface.
+- **Media controls** use the USB Consumer Control HID interface to send media key commands such as Play/Pause and Track Navigation.
 
-\## How it works
+Because the device uses standard USB HID protocols, it is recognized automatically by Windows, Linux, and macOS.
 
+## Building
 
+### Requirements
 
-The ESP32 continuously monitors the touch pins. When a touch is detected, it sends the corresponding HID command over USB.
+- Arduino IDE
+- ESP32 Arduino Core
+- ESP32-S2 development board
 
+### Libraries
 
+The following libraries are included with the ESP32 Arduino Core:
 
-Browser actions use the keyboard HID interface, while media controls use consumer control HID commands.
+- `USB`
+- `USBHIDKeyboard`
+- `USBHIDConsumerControl`
 
+### Flashing
 
+1. Open the project in Arduino IDE.
+2. Select your ESP32-S2 board.
+3. Compile and upload the sketch.
+4. Connect the board via USB.
 
-\## Building
+The device should be detected automatically as a USB HID controller.
 
+## Touch Calibration
 
+Capacitive touch values can vary depending on:
 
-Open the project in Arduino IDE and install the ESP32 board package.
+- Board model
+- Power source
+- Wiring
+- Environmental conditions
 
-
-
-Required libraries are included with the ESP32 Arduino core:
-
-
-
-\* USB
-
-\* USBHIDKeyboard
-
-\* USBHIDConsumerControl
-
-
-
-Select your ESP32-S2 board and upload.
-
-
-
-\## Notes
-
-
-
-Touch values vary between boards and setups. You may need to adjust the touch threshold for reliable detection.
-
-
-
-Current threshold:
-
-
+The default threshold is:
 
 ```cpp
-
-const int TOUCH\_THRESHOLD = 30000;
-
+const int TOUCH_THRESHOLD = 30000;
 ```
 
+If touch detection is unreliable, use the Serial Monitor to observe touch readings and adjust the threshold accordingly.
 
+## Future Improvements
 
-Use Serial output to monitor touch readings and tune the value if needed.
+- OLED status display
+- Volume controls
+- Additional browser shortcuts
+- Automatic touch calibration
+- User-configurable profiles
+- Macro support
+- Touch feedback indicators
 
+## License
 
-
-\## Future Ideas
-
-
-
-\* OLED menu
-
-\* Volume controls
-
-\* More browser shortcuts
-
-\* Touch calibration
-
-\* Profiles and macros
-
-
-
+This project is provided as-is for educational and personal use. Feel free to modify and adapt it to your needs.
